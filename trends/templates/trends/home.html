@@ -1,0 +1,199 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<style>
+    .product-card {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .product-img {
+        width: 100%;
+        height: 360px;
+        object-fit: cover;
+    }
+
+    .product-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 250px;
+    }
+
+    .product-title {
+        min-height: 52px;
+        max-height: 52px;
+        overflow: hidden;
+    }
+
+    .product-description {
+        min-height: 100px;
+        max-height: 100px;
+        overflow: hidden;
+    }
+
+    .product-btn {
+        margin-top: auto;
+        width: 100%;
+    }
+</style>
+
+</head>
+<body>
+
+    <!-- call the navbar.html file -->
+    {% include 'trends/navbar.html' %}
+
+    <!-- carousel section begins here -->
+    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+
+        <div class="carousel-inner">
+
+            <div class="carousel-item active" data-bs-interval="3000">
+                <img src="{% static 'trends/im1.jpg' %}" class="d-block w-100" alt="im1" style="object-fit: cover; height: 500px;">
+                <div class="carousel-caption">
+                    <h1>Walk Into the Latest Trends</h1>
+                    <p>Step into style with colours, textures, and designs that make every corner feel fresh.</p>
+                </div>
+            </div>
+
+            <div class="carousel-item" data-bs-interval="3000">
+                <img src="{% static 'trends/im2.jpg' %}" class="d-block w-100" alt="im2" style="object-fit: cover; height: 500px;">
+                <div class="carousel-caption">
+                    <h1>Bright Colours Could Be Your Latest Trend</h1>
+                    <p>Add a splash of brightness to your home and let every space feel more alive.</p>
+                </div>
+            </div>
+
+            <div class="carousel-item" data-bs-interval="3000">
+                <img src="{% static 'trends/im3.jpg' %}" class="d-block w-100" alt="im3" style="object-fit: cover; height: 500px;">
+                <div class="carousel-caption">
+                    <h1>A World of Colour, Right at Home</h1>
+                    <p>Bring home colours that lift the mood, refresh the space, and make every room stand out.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+
+    </div>
+    <!-- carousel section ends here -->
+
+    <!-- card section begins here -->
+
+    <div class="container mt-4">
+     
+        <div class="alert alert-primary text-center">
+         
+            <h2>Our Products</h2>
+
+        </div>
+
+                {% if warning %}
+            <div class="alert alert-warning text-center">
+                {{ warning }}
+
+                {% if show_login_prompt %}
+                    <a href="{% url 'loginuser' %}" class="btn btn-primary btn-sm ms-2">
+                        Login to View More
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+
+      <div class="row align-items-stretch">
+        
+         {% for x in product_info %}
+         <div class="col-lg-4 col-md-6 col-12 mb-4 d-flex">
+
+    <div class="card product-card">
+        <img src="{{ x.product_img.url }}" class="card-img-top product-img" alt="{{ x.product_name }}">
+
+        <div class="card-body product-body">
+            <h5 class="card-title product-title">
+                {{ x.product_name }}
+            </h5>
+
+            <p class="card-text product-description">
+                {{ x.product_description }}
+            </p>
+
+            <a href="#" class="btn btn-primary product-btn">
+                {{ x.product_category }}, {{ x.product_id }}
+            </a>
+        </div>
+    </div>
+
+</div> 
+          {% endfor %}
+            </div>
+
+      {% if is_paginated %}
+      <nav aria-label="Product pagination" class="mt-4">
+          <ul class="pagination justify-content-center">
+
+              {% if product_info.has_previous %}
+                  <li class="page-item">
+                      <a class="page-link" href="?page={{ product_info.previous_page_number }}">
+                          Previous
+                      </a>
+                  </li>
+              {% endif %}
+
+              {% for page_number in product_info.paginator.page_range %}
+                  <li class="page-item {% if product_info.number == page_number %}active{% endif %}">
+                      <a class="page-link" href="?page={{ page_number }}">
+                          {{ page_number }}
+                      </a>
+                  </li>
+              {% endfor %}
+
+              {% if product_info.has_next %}
+                  <li class="page-item">
+                      <a class="page-link" href="?page={{ product_info.next_page_number }}">
+                          Next
+                      </a>
+                  </li>
+              {% endif %}
+
+          </ul>
+      </nav>
+      {% endif %}
+
+    </div>
+
+    <!-- card section ends here -->
+
+     <!-- footer section begins here -->
+     
+     {% include 'trends/footer.html' %}
+     
+     <!-- footer section ends here -->
+    
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+
+</body>
+</html>
