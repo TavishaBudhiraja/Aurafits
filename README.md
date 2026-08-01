@@ -64,7 +64,7 @@ python -m venv env
 For Windows:
 
 ```bash
-env\Scripts\activate
+.\env\Scripts\activate
 ```
 
 ### 5. Install dependencies
